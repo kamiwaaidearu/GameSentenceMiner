@@ -3,7 +3,7 @@ import path from "path";
 import {promisify} from "util";
 import {execFile} from "child_process";
 import {app} from "electron";
-import {__dirname} from "./main.js";
+import {__dirname} from "./index.js";
 
 export type SupportedPlatform = 'linux' | 'darwin' | 'win32';
 export const isMac = process.platform === 'darwin';

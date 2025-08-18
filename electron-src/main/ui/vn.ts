@@ -11,7 +11,7 @@ import {
 } from "../store.js";
 import {BrowserWindow, dialog, ipcMain} from "electron";
 import {getAssetsDir} from "../util.js";
-import {isQuitting, mainWindow} from "../main.js";
+import {isQuitting, mainWindow} from "../index.js";
 import {ObsScene} from "./obs.js";
 
 let VNWindow: BrowserWindow | null = null;

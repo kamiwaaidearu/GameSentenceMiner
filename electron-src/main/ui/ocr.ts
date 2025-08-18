@@ -25,7 +25,7 @@ import {
     setKeepNewline,
     setUseObsAsSource,
 } from '../store.js';
-import { isQuitting, mainWindow } from '../main.js';
+import { isQuitting, mainWindow } from '../index.js';
 import { getCurrentScene, ObsScene } from './obs.js';
 import { BASE_DIR, getAssetsDir, getPlatform, isWindows, sanitizeFilename } from '../util.js';
 import path, { resolve } from 'path';

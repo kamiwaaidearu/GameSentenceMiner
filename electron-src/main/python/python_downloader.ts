@@ -4,7 +4,7 @@ import * as os from 'os';
 import { Downloader } from 'nodejs-file-downloader';
 import * as tar from 'tar';
 import { BASE_DIR, execFileAsync, getPlatform, isArmMac, SupportedPlatform } from '../util.js';
-import { mainWindow } from '../main.js';
+import { mainWindow } from '../index.js';
 
 // --- Interfaces and Constants ---
 

@@ -22,7 +22,7 @@ import {
 import {BrowserWindow, ipcMain, dialog} from "electron";
 import path from "path";
 import {getAssetsDir} from "../util.js";
-import {isQuitting, mainWindow} from "../main.js";
+import {isQuitting, mainWindow} from "../index.js";
 import {ObsScene} from "./obs.js";
 
 export let yuzuWindow: BrowserWindow | null = null;

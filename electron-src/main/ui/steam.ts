@@ -1,7 +1,7 @@
 import {exec, execFile} from 'child_process';
 import {BrowserWindow, ipcMain, dialog} from 'electron';
 import {getAssetsDir} from '../util.js';
-import {isQuitting, mainWindow} from '../main.js';
+import {isQuitting, mainWindow} from '../index.js';
 import {
     getSteamGames,
     getSteamPath,

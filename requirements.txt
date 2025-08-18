@@ -20,7 +20,7 @@ ttkbootstrap~=1.10.1
 dataclasses_json~=0.6.7
 pyinstaller
 pystray~=0.19.5
-pywin32~=310
+pywin32~=310.0
 pillow~=11.1.0
 dataclasses-json~=0.6.7
 win10toast~=0.9

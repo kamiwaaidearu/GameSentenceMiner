@@ -2,7 +2,7 @@
 import {BrowserWindow, dialog, ipcMain} from 'electron';
 import path from 'path';
 import {BASE_DIR, getAssetsDir} from '../util.js';
-import {isQuitting} from '../main.js';
+import {isQuitting} from '../index.js';
 import {exec} from 'child_process';
 import OBSWebSocket from 'obs-websocket-js';
 import Store from "electron-store";

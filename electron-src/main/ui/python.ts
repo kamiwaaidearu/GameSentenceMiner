@@ -4,7 +4,7 @@ import { ChildProcess, spawn } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import { getOrInstallPython, reinstallPython } from '../python/python_downloader.js';
-import { runPipInstall, closeGSM, restartGSM, checkAndInstallUV, pyProc } from '../main.js';
+import { runPipInstall, closeGSM, restartGSM, checkAndInstallUV, pyProc } from '../index.js';
 import { BASE_DIR, execFileAsync, PACKAGE_NAME } from '../util.js';
 
 let consoleProcess: ChildProcess | null = null;

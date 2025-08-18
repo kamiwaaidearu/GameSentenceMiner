@@ -21,7 +21,7 @@ import {
 } from "../store.js";
 import {webSocketManager} from "../communication/websocket.js";
 import {reinstallPython} from "../python/python_downloader.js";
-import { runPipInstall } from '../main.js';
+import { runPipInstall } from '../index.js';
 
 export let window_transparency_process: any = null; // Process for the Window Transparency Tool
 

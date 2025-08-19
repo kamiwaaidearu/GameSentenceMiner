@@ -1,0 +1,71 @@
+body.index {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: #1a1a1a;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    /*overflow: hidden; !* Add this line *!*/
+}
+
+.tab-bar {
+    background: #2a2a2a;
+    padding: 10px;
+    display: flex;
+    gap: 5px;
+    height: 50px;
+    /* Example fixed height (adjust based on your padding) */
+    /* If padding is included in height, use box-sizing: border-box; */
+    box-sizing: border-box;
+}
+
+.tab-button {
+    background: #3a3a3a;
+    border: none;
+    color: #ffffff;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.tab-button:hover {
+    background: #4a4a4a;
+}
+
+.tab-button.active {
+    background: #5a5a5a;
+}
+
+.tab-content {
+    height: 100%;
+    display: block;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#terminal {
+    width: 100%;
+    height: 100%;
+}
+
+/* Python tab specific grid layout - max 2 columns */
+#python-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    max-width: 100%;
+    gap: 15px;
+}
+
+/* Ensure Python grid never exceeds 2 columns */
+@media (min-width: 900px) {
+    #python-grid-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}

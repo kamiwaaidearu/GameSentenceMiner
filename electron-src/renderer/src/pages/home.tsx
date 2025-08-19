@@ -161,19 +161,6 @@ export const HomePage: React.FC = () => {
         return () => clearInterval(statusInterval);
     }, [gsmStatus]);
 
-    // Waiting for GSM status to be fetched
-    if (!gsmStatus) {
-        return (
-            <div className="card">
-                <button className="status-button card red">
-                    <span className="icon">⛏</span>
-                    <span>GSM</span>
-                    <span>Installing/Initializing</span>
-                </button>
-            </div>
-        );
-    }
-
     return (
         <>
             <div className="card">
@@ -254,39 +241,49 @@ export const HomePage: React.FC = () => {
                 <h2>Status:</h2>
                 <div className="grid-container">
                     <button
-                        className={`status-button card ${gsmStatus.ready ? 'green' : 'red'}`}
+                        className={`status-button card ${gsmStatus?.ready ? 'green' : 'red'}`}
                         title={
-                            gsmStatus.ready
-                                ? `Status: ${gsmStatus.status}\nWebSockets: ${gsmStatus.websockets_connected.length > 0 ? gsmStatus.websockets_connected.join(', ') : 'None'}\nOBS: ${gsmStatus.obs_connected ? 'Started' : 'Stopped'}\nAnki: ${gsmStatus.anki_connected ? 'Connected' : 'Disconnected'}\nLast Line Received: ${getRelativeTime(gsmStatus.last_line_received)}`
+                            gsmStatus?.ready
+                                ? `Status: ${gsmStatus.status}\nWebSockets: ${gsmStatus.websockets_connected.length > 0 ? gsmStatus.websockets_connected.join(', ') : 'None'}\nOBS: ${gsmStatus.obs_connected ? 'Started' : 'Stopped'}\nAnki: ${gsmStatus.anki_connected ? 'Connected' : 'Disconnected'}\nLast Line Received: ${getRelativeTime(gsmStatus?.last_line_received)}`
                                 : 'GSM is stopped.'
                         }
                     >
                         <span className="icon">⛏</span>
                         <span>GSM</span>
                         <span>
-                            {gsmStatus.words_being_processed.length > 0
-                                ? `Processing: ${gsmStatus.words_being_processed}`
-                                : gsmStatus.ready
-                                  ? gsmStatus.status
-                                  : 'GSM is not running'}
+                            {!gsmStatus
+                                ? 'Installing/Initializing'
+                                : gsmStatus.words_being_processed.length > 0
+                                  ? `Processing: ${gsmStatus.words_being_processed}`
+                                  : gsmStatus.ready
+                                    ? gsmStatus.status
+                                    : 'GSM is not running'}
                         </span>
                     </button>
 
                     <button
-                        className={`status-button card ${gsmStatus.clipboard_enabled ? 'green' : gsmStatus.websockets_connected.length > 0 ? 'neutral' : 'red'}`}
+                        className={`status-button card ${!gsmStatus ? 'red' : gsmStatus.clipboard_enabled ? 'green' : gsmStatus.websockets_connected.length > 0 ? 'neutral' : 'red'}`}
                         title={
-                            gsmStatus.clipboard_enabled
-                                ? 'Clipboard monitoring is enabled.'
-                                : 'Clipboard monitoring is disabled.'
+                            !gsmStatus
+                                ? 'Initializing...'
+                                : gsmStatus.clipboard_enabled
+                                  ? 'Clipboard monitoring is enabled.'
+                                  : 'Clipboard monitoring is disabled.'
                         }
                     >
                         <span className="icon">📋</span>
                         <span>Clipboard</span>
-                        <span>{gsmStatus.clipboard_enabled ? 'Enabled' : 'Disabled'}</span>
+                        <span>
+                            {!gsmStatus
+                                ? 'Initializing'
+                                : gsmStatus.clipboard_enabled
+                                  ? 'Enabled'
+                                  : 'Disabled'}
+                        </span>
                     </button>
 
                     <div className="grid-container">
-                        {gsmStatus.websockets_connected.map((ws) => (
+                        {gsmStatus?.websockets_connected.map((ws) => (
                             <button
                                 key={ws}
                                 className="status-button card green"
@@ -300,27 +297,45 @@ export const HomePage: React.FC = () => {
                     </div>
 
                     <button
-                        className={`status-button card ${gsmStatus.obs_connected ? 'green' : 'red'}`}
+                        className={`status-button card ${!gsmStatus ? 'red' : gsmStatus.obs_connected ? 'green' : 'red'}`}
                         title={
-                            gsmStatus.obs_connected ? 'OBS is connected.' : 'OBS is disconnected.'
+                            !gsmStatus
+                                ? 'Initializing...'
+                                : gsmStatus.obs_connected
+                                  ? 'OBS is connected.'
+                                  : 'OBS is disconnected.'
                         }
                     >
                         <span className="icon">📹</span>
                         <span>OBS</span>
-                        <span>{gsmStatus.obs_connected ? 'Connected' : 'Disconnected'}</span>
+                        <span>
+                            {!gsmStatus
+                                ? 'Initializing'
+                                : gsmStatus.obs_connected
+                                  ? 'Connected'
+                                  : 'Disconnected'}
+                        </span>
                     </button>
 
                     <button
-                        className={`status-button card ${gsmStatus.anki_connected ? 'green' : 'red'}`}
+                        className={`status-button card ${!gsmStatus ? 'red' : gsmStatus.anki_connected ? 'green' : 'red'}`}
                         title={
-                            gsmStatus.anki_connected
-                                ? 'Anki is connected.'
-                                : 'Anki is disconnected.'
+                            !gsmStatus
+                                ? 'Initializing...'
+                                : gsmStatus.anki_connected
+                                  ? 'Anki is connected.'
+                                  : 'Anki is disconnected.'
                         }
                     >
                         <span className="icon">📘</span>
                         <span>Anki</span>
-                        <span>{gsmStatus.anki_connected ? 'Connected' : 'Disconnected'}</span>
+                        <span>
+                            {!gsmStatus
+                                ? 'Initializing'
+                                : gsmStatus.anki_connected
+                                  ? 'Connected'
+                                  : 'Disconnected'}
+                        </span>
                     </button>
                 </div>
             </div>

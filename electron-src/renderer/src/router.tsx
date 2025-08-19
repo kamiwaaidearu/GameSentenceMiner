@@ -1,4 +1,6 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
+import { HomePage } from './pages/home';
+import { Layout } from './Layout';
 
 const BrowserRouter = () => {
     return createBrowserRouter([
@@ -8,13 +10,41 @@ const BrowserRouter = () => {
             //errorElement: <ErrorPage />,
             children: [
                 {
-                    path: 'manage-inventories',
-                    element: <ManageInventoriesPage />,
+                    path: '',
+                    loader: () => redirect('/home'),
                 },
                 {
-                    path: 'manage-inventories/:resellerInventoryId',
-                    element: <ManageInventoryItemsPage />,
+                    path: 'home',
+                    element: <HomePage />,
                 },
+                // {
+                //     path: 'furigana',
+                //     element: <FuriganaPage />,
+                // },
+                // {
+                //     path: 'launcher',
+                //     element: <LauncherPage />,
+                // },
+                // {
+                //     path: 'settings',
+                //     element: <SettingsPage />,
+                // },
+                // {
+                //     path: 'steam',
+                //     element: <SteamPage />,
+                // },
+                // {
+                //     path: 'steamconfig',
+                //     element: <SteamConfigPage />,
+                // },
+                // {
+                //     path: 'VN',
+                //     element: <VNPage />,
+                // },
+                // {
+                //     path: 'yuzu',
+                //     element: <YuzuPage />,
+                // },
                 {
                     path: '*',
                     //element: <ErrorPage variant="not-found" />

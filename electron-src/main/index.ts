@@ -50,6 +50,8 @@ import * as fs from 'node:fs';
 import { registerFrontPageIPC } from './ui/front.js';
 import { registerPythonIPC } from './ui/python.js';
 import { execFile } from 'node:child_process';
+import { is } from '@electron-toolkit/utils';
+import { join } from 'node:path';
 
 export let mainWindow: BrowserWindow | null = null;
 let tray: Tray;
@@ -61,9 +63,6 @@ let pythonPath: string;
 let pythonUpdating: boolean = false;
 const originalLog = console.log;
 const originalError = console.error;
-
-const __filename = fileURLToPath(import.meta.url);
-export const __dirname = path.dirname(__filename);
 
 function getAutoUpdater(): AppUpdater {
     const { autoUpdater } = electronUpdater;
@@ -157,7 +156,7 @@ async function runCommand(
     command: string,
     args: string[],
     stdout: boolean,
-    stderr: boolean
+    stderr: boolean,
 ): Promise<void> {
     return new Promise((resolve, reject) => {
         const proc = spawn(command, args);
@@ -203,7 +202,7 @@ function runGSM(command: string, args: string[]): Promise<void> {
             originalLog(`stdout: ${data}`);
             if (data.toString().toLowerCase().includes('restart_for_settings_change')) {
                 console.log(
-                    'Restart Required for some of the settings saved to take affect! Restarting...'
+                    'Restart Required for some of the settings saved to take affect! Restarting...',
                 );
                 restartGSM();
                 return;
@@ -249,13 +248,22 @@ async function createWindow() {
             devTools: true,
             nodeIntegrationInSubFrames: true,
             backgroundThrottling: false,
+            preload: join(__dirname, '../preload/index.mjs'),
         },
         title: `${APP_NAME} v${app.getVersion()}`,
     });
 
     registerIPC();
 
-    mainWindow.loadFile(path.join(getAssetsDir(), 'index.html'));
+    // HMR for renderer base on electron-vite cli.
+    // Load the remote URL for development or the local html file for production.
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+        console.log('LOAD LOCAL', process.env['ELECTRON_RENDERER_URL']);
+        mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
+    } else {
+        console.log('LOAD DIST');
+        mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
+    }
 
     const menu = Menu.buildFromTemplate([
         {
@@ -302,7 +310,7 @@ async function createWindow() {
                         mainWindow.reload();
                     }
                 },
-            })
+            }),
         );
     }
 
@@ -363,28 +371,20 @@ async function updateGSM(shouldRestart: boolean = false, force = false): Promise
             // );
             await runCommand(
                 pythonPath,
-                [
-                    '-m',
-                    'uv',
-                    'pip',
-                    'install',
-                    '--upgrade',
-                    '--prerelease=allow',
-                    PACKAGE_NAME
-                ],
+                ['-m', 'uv', 'pip', 'install', '--upgrade', '--prerelease=allow', PACKAGE_NAME],
                 true,
-                true
+                true,
             );
         } catch (err) {
             console.error(
                 'Failed to install custom Python package. Falling back to default package: GameSentenceMiner, forcing upgrade.',
-                err
+                err,
             );
             await runCommand(
                 pythonPath,
                 ['-m', 'uv', 'pip', 'install', '--upgrade', '--prerelease=allow', PACKAGE_NAME],
                 true,
-                true
+                true,
             );
         }
         console.log('Update completed successfully.');
@@ -428,7 +428,7 @@ function showWindow() {
 
 export async function isPackageInstalled(
     pythonPath: string,
-    packageName: string
+    packageName: string,
 ): Promise<boolean> {
     try {
         await runCommand(pythonPath, ['-m', 'pip', 'show', packageName], false, false);
@@ -484,7 +484,12 @@ async function ensureAndRunGSM(pythonPath: string, retry = 1): Promise<void> {
     if (!isInstalled) {
         console.log(`${APP_NAME} is not installed. Installing now...`);
         try {
-            await runCommand(pythonPath, ['-m', 'uv', 'pip', 'install', '--prerelease=allow', PACKAGE_NAME], true, true);
+            await runCommand(
+                pythonPath,
+                ['-m', 'uv', 'pip', 'install', '--prerelease=allow', PACKAGE_NAME],
+                true,
+                true,
+            );
             console.log('Installation complete.');
         } catch (err) {
             console.error('Failed to install package:', err);
@@ -501,9 +506,18 @@ async function ensureAndRunGSM(pythonPath: string, retry = 1): Promise<void> {
             console.log('Retrying installation of GameSentenceMiner...');
             await runCommand(
                 pythonPath,
-                ['-m', 'uv', 'pip', 'install', '--force-reinstall', '--no-config', '--prerelease=allow', PACKAGE_NAME],
+                [
+                    '-m',
+                    'uv',
+                    'pip',
+                    'install',
+                    '--force-reinstall',
+                    '--no-config',
+                    '--prerelease=allow',
+                    PACKAGE_NAME,
+                ],
                 true,
-                true
+                true,
             );
             console.log('after run command');
             await ensureAndRunGSM(pythonPath, retry - 1);

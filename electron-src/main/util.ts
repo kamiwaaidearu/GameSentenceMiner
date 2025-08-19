@@ -1,17 +1,15 @@
 import * as os from 'os';
-import path from "path";
-import {promisify} from "util";
-import {execFile} from "child_process";
-import {app} from "electron";
-import {__dirname} from "./index.js";
-
+import path from 'path';
+import { promisify } from 'util';
+import { execFile } from 'child_process';
+import { app } from 'electron';
 export type SupportedPlatform = 'linux' | 'darwin' | 'win32';
 export const isMac = process.platform === 'darwin';
 export const cpuModel = os.cpus()[0]?.model || null;
 export const isArmMac: boolean = isMac && !!cpuModel && /Apple M\d/i.test(cpuModel);
 
 export const APP_NAME = 'GameSentenceMiner';
-export const PACKAGE_NAME = "GameSentenceMiner";
+export const PACKAGE_NAME = 'GameSentenceMiner';
 export const execFileAsync = promisify(execFile);
 
 export const isDev = !app.isPackaged;
@@ -29,7 +27,7 @@ export const getPlatform = (): SupportedPlatform => {
             return platform;
         default:
             throw new Error(
-                `Unsupported platform: ${platform}. Please report this to us and we may add support.`
+                `Unsupported platform: ${platform}. Please report this to us and we may add support.`,
             );
     }
 };
@@ -49,26 +47,26 @@ export function isLinux(): boolean {
  */
 export function getAssetsDir(): string {
     return isDev
-        ? path.join(__dirname, "../../electron-src/assets") // Development path
-        : path.join(process.resourcesPath, "assets"); // Production (ASAR-safe)
+        ? path.join(__dirname, '../renderer/assets') // Development path for React public assets
+        : path.join(process.resourcesPath, '/renderer/assets'); // Production (ASAR-safe)
 }
 
 export function getGSMBaseDir(): string {
     return isDev
-        ? "./" // Development path
-        : process.resourcesPath
+        ? './' // Development path
+        : process.resourcesPath;
 }
 
 export function getResourcesDir(): string {
     return isDev
-        ? path.join(__dirname, "../../") // Development path
-        : path.join(process.resourcesPath, "resources"); // Production (ASAR-safe)
+        ? path.join(__dirname, '../../') // Development path
+        : path.join(process.resourcesPath, 'resources'); // Production (ASAR-safe)
 }
 
 export function getOverlayPath(): string {
     return isDev
-        ? path.join(__dirname, "../../GSM_Overlay/out/gsm_overlay-win32-x64") // Development path
-        : path.join(process.resourcesPath, "GSM_Overlay/gsm_overlay-win32-x64"); // Production (ASAR-safe)
+        ? path.join(__dirname, '../../GSM_Overlay/out/gsm_overlay-win32-x64') // Development path
+        : path.join(process.resourcesPath, 'GSM_Overlay/gsm_overlay-win32-x64'); // Production (ASAR-safe)
 }
 
 export function sanitizeFilename(filename: string): string {
@@ -77,7 +75,7 @@ export function sanitizeFilename(filename: string): string {
 
 export async function isConnected() {
     try {
-        const isConnected = await fetch("https://www.google.com", { method: "HEAD" });
+        const isConnected = await fetch('https://www.google.com', { method: 'HEAD' });
         return isConnected.ok;
     } catch (err) {
         return false;
